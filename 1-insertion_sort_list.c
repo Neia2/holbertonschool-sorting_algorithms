@@ -14,12 +14,6 @@ void insertion_sort_list(listint_t **list)
 		if (list == NULL || *list == NULL || (*list)->next == NULL)
 		return;
 
-<<<<<<< HEAD
-=======
-		listint_t *curr = (*list)->next;
-		listint_t *prev, *temp;
-
->>>>>>> 66f9c43 (quick sort)
 	while (curr != NULL)
 	{
 		while (prev != NULL && prev->n > curr->n)
