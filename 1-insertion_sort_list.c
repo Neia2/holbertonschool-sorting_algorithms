@@ -1,48 +1,49 @@
 #include "sort.h"
-
 /**
- * insertion_sort_list - Sorts a list of integers in ascending order
- *                        using the Insertion sort algorithm
- * @list: Double pointer to the head of the linked list
+ * insertion_sort_list -  sorts a DLL of integers using the Insertion sort
+ * @list: DLL to sort
+ * Return: Nothing.
  */
 void insertion_sort_list(listint_t **list)
 {
-    if (list == NULL || *list == NULL || (*list)->next == NULL)
-        return;
+	int done = 0;
+	listint_t *tmp_node, *aux_node;
 
-    listint_t *sorted = NULL; // Initialize sorted linked list
+	if (list == NULL || *list == NULL || (*list)->next == NULL)
+		return;
 
-    listint_t *curr = *list; // Traverse the original list
-    while (curr != NULL)
-    {
-        listint_t *next = curr->next; // Store the next node
-
-        if (sorted == NULL || sorted->n >= curr->n)
-        {
-            // Insert at the beginning of the sorted list
-            curr->next = sorted;
-            if (sorted != NULL)
-                sorted->prev = curr;
-            sorted = curr;
-            sorted->prev = NULL;
-        }
-        else
-        {
-            // Traverse the sorted list to find the correct position
-            listint_t *temp = sorted;
-            while (temp->next != NULL && temp->next->n < curr->n)
-                temp = temp->next;
-
-            // Insert after temp
-            curr->next = temp->next;
-            if (temp->next != NULL)
-                temp->next->prev = curr;
-            temp->next = curr;
-            curr->prev = temp;
-        }
-
-        curr = next; // Move to the next node in the original list
-    }
-
-    *list = sorted; // Update the head of the list
+	tmp_node = (*list);
+	aux_node = tmp_node->next;
+	while (aux_node)
+	{
+		while (tmp_node)
+		{
+			if (aux_node->n < tmp_node->n)
+			{
+				if (aux_node->next)
+					aux_node->next->prev = aux_node->prev;
+				else
+					done = 1;
+				tmp_node->next = aux_node->next;
+				aux_node->next = tmp_node;
+				aux_node->prev = tmp_node->prev;
+				if (tmp_node->prev)
+					tmp_node->prev->next = aux_node;
+				else
+					*list = aux_node;
+				tmp_node->prev = aux_node;
+				tmp_node = aux_node->prev;
+				print_list(*list);
+			}
+			else
+			{
+				aux_node = aux_node->next;
+				tmp_node = tmp_node->next;
+			}
+		}
+		if (done)
+			break;
+		aux_node = aux_node->next;
+		tmp_node = aux_node->prev;
+	}
 }
