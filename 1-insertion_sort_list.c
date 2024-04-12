@@ -7,35 +7,42 @@
  */
 void insertion_sort_list(listint_t **list)
 {
-	listint_t *curr = (*list)->next;
-	listint_t *prev = curr->prev;
-	listint_t *temp = curr->next;
+    if (list == NULL || *list == NULL || (*list)->next == NULL)
+        return;
 
-		if (list == NULL || *list == NULL || (*list)->next == NULL)
-		return;
+    listint_t *sorted = NULL; // Initialize sorted linked list
 
-	while (curr != NULL)
-	{
-		while (prev != NULL && prev->n > curr->n)
-		{
-			if (prev->prev != NULL)
-			prev->prev->next = curr;
-			if (curr->next != NULL)
-			curr->next->prev = prev;
+    listint_t *curr = *list; // Traverse the original list
+    while (curr != NULL)
+    {
+        listint_t *next = curr->next; // Store the next node
 
-			curr->prev = prev->prev;
-			prev->next = curr->next;
-			curr->next = prev;
-			prev->prev = curr;
+        if (sorted == NULL || sorted->n >= curr->n)
+        {
+            // Insert at the beginning of the sorted list
+            curr->next = sorted;
+            if (sorted != NULL)
+                sorted->prev = curr;
+            sorted = curr;
+            sorted->prev = NULL;
+        }
+        else
+        {
+            // Traverse the sorted list to find the correct position
+            listint_t *temp = sorted;
+            while (temp->next != NULL && temp->next->n < curr->n)
+                temp = temp->next;
 
-			if (curr->prev == NULL)
-				*list = curr;
+            // Insert after temp
+            curr->next = temp->next;
+            if (temp->next != NULL)
+                temp->next->prev = curr;
+            temp->next = curr;
+            curr->prev = temp;
+        }
 
-			print_list(*list);
+        curr = next; // Move to the next node in the original list
+    }
 
-			prev = curr->prev;
-		}
-
-			curr = temp;
-		}
+    *list = sorted; // Update the head of the list
 }
